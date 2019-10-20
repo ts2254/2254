@@ -1,0 +1,31 @@
+unsigned long chars=0;
+unsigned long words=0;
+unsigned long lines=0;
+
+%%
+[a-zA-Z]+               {words++;chars+=strlen(yytext);} //[a-zA-Z]+  表示一个或者多个由大小写字母组成的单词 
+[a-z\-A-z]+             {words++;chars+=strlen(yytext);} //[a-z\-A-z]+ 对于特殊的中间加"-"的单词 
+[0-9]+                  {words++;chars+=strlen(yytext);} //[0-9]+     数字集合 
+[.|,|\b| |\t|\r]        {chars++;}                       //[.|,|\b| |\t|\r] 特殊符号集合 
+[\n]                    {lines++;chars++;}
+%%
+
+int main()
+{
+   char filename[100];
+   printf("统计一个英文文件中字符、单词、句子数\n");
+   printf("请输入要计算的文件名：");
+   scanf("%s",filename);
+   yyin=fopen(filename,"r");
+   printf("开始进行统计...\n");
+   printf("未定义的字符:");
+   yylex();
+   printf("\n字符数：%ld\n", chars);
+   printf("单词数：%ld\n", words);
+   printf("行数  ：%ld\n", lines);
+   return 1;
+}
+int yywrap()
+{
+    return 1;
+}
